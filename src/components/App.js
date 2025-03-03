@@ -121,8 +121,9 @@ function Admin({ products }) {
     <>
       <PageNav />
       <h1>Admin Panel</h1>
+      {products.length === 0 ? <p>No products available</p> : null}
       {products.map((item) => (
-        <NavLink key={item.id} to={`/admin/products/${item.id}`}>
+        <NavLink key={item.id} to={`/admin/products/${item.id}`} data-cy={`admin-product-${item.id}`}>
           {item.name}
         </NavLink>
       ))}
