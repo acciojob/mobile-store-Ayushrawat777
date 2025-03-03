@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import {
   BrowserRouter,
   Route,
@@ -6,9 +7,10 @@ import {
   useParams,
   Link,
   NavLink,
+  Navigate,
 } from "react-router-dom";
 
-const initialProducts = [
+const products = [
   { id: 1, name: "Mobile 1", description: "Description 1", price: "$200" },
   { id: 2, name: "Mobile 2", description: "Description 2", price: "$300" },
   { id: 3, name: "Mobile 3", description: "Description 3", price: "$400" },
@@ -20,13 +22,10 @@ const initialProducts = [
 function AdminProduct({ products, setProducts }) {
   const { id } = useParams();
   const product = products.find((p) => p.id === Number(id));
-
-  if (!product) return <p>Product not found</p>;
-
+  if (!product) {return <p>Product not found</p>;}
   const handleDelete = () => {
     setProducts(products.filter((p) => p.id !== Number(id)));
   };
-
   return (
     <div>
       <h2>{product.name}</h2>
@@ -38,18 +37,18 @@ function AdminProduct({ products, setProducts }) {
     </div>
   );
 }
-
-function Home({ products }) {
+function Home() {
   return (
     <>
       <PageNav />
       <div className="col-12">
-        {products.map((item) => (
-          <div key={item.id}>
-            <Link to={`/products/${item.id}`}>{item.name}</Link>
-            <button>Buy</button>
-          </div>
-        ))}
+        <div>
+          {products.map((item) => (
+            <Link key={item.id} to={`/products/${item.id}`}>
+              {item.name} <button>Buy</button>
+            </Link>
+          ))}
+        </div>
       </div>
     </>
   );
@@ -64,22 +63,22 @@ function Product() {
       <div>
         <h1>Product {id} </h1>
         <Link to="/">
-          <button>Other Products</button>
+          <button className="btn">Other Products</button>
         </Link>
       </div>
     </>
   );
 }
 
-function Admin({ products }) {
+function Admin() {
   return (
     <>
       <PageNav />
       <h1>Admin Panel</h1>
       {products.map((item) => (
-        <div key={item.id}>
-          <NavLink to={`/admin/products/${item.id}`}>{item.name}</NavLink>
-        </div>
+        <NavLink key={item.id} to={`products/${item.id}`}>
+          {item.name}
+        </NavLink>
       ))}
     </>
   );
@@ -95,7 +94,7 @@ function PageNav() {
 }
 
 function App() {
-  const [products, setProducts] = useState(initialProducts);
+  const [pro, setProducts] = useState(products);
 
   return (
     <BrowserRouter>
@@ -105,7 +104,7 @@ function App() {
         <Route path="products/:id" element={<Product />} />
         <Route
           path="admin/products/:id"
-          element={<AdminProduct products={products} setProducts={setProducts} />}
+          element={<AdminProduct products={pro} setProducts={setProducts} />}
         />
       </Routes>
     </BrowserRouter>
