@@ -22,19 +22,53 @@ function AdminProduct({ products, setProducts }) {
   const { id } = useParams();
   const navigate = useNavigate(); 
   const product = products.find((p) => p.id === Number(id));
+
+  const [editedProduct, setEditedProduct] = useState({
+    name: product?.name || "",
+    description: product?.description || "",
+    price: product?.price || "",
+  });
+
   if (!product) {
     return <p>Product not found</p>;
   }
 
+  // Handle input change
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEditedProduct({ ...editedProduct, [name]: value });
+  };
+
+  // Save changes
+  const handleSave = () => {
+    const updatedProducts = products.map((p) =>
+      p.id === Number(id) ? { ...p, ...editedProduct } : p
+    );
+    setProducts(updatedProducts);
+    navigate("/admin"); // Navigate back to admin panel
+  };
+
+  // Delete product
   const handleDelete = () => {
-    setProducts(products.filter((p) => p.id !== Number(id)));navigate("/");
+    setProducts(products.filter((p) => p.id !== Number(id)));
+    navigate("/"); // Redirect to Home
   };
 
   return (
     <div>
-      <h2>{product.name}</h2>
-      <p>{product.description}</p>
+      <h2>Edit Product</h2>
+      <label>Name:</label>
+      <input type="text" name="name" value={editedProduct.name} onChange={handleChange} />
+
+      <label>Description:</label>
+      <input type="text" name="description" value={editedProduct.description} onChange={handleChange} />
+
+      <label>Price:</label>
+      <input type="text" name="price" value={editedProduct.price} onChange={handleChange} />
+
+      <button onClick={handleSave}>Save Changes</button>
       <button onClick={handleDelete}>Delete</button>
+
       <Link to="/admin">
         <button>Back</button>
       </Link>
