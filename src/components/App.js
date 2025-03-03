@@ -1,5 +1,4 @@
-import React from 'react';
-
+import React, { useState } from "react";
 import {
   BrowserRouter,
   Route,
@@ -9,7 +8,7 @@ import {
   NavLink,
 } from "react-router-dom";
 
-const products = [
+const initialProducts = [
   { id: 1, name: "Mobile 1", description: "Description 1", price: "$200" },
   { id: 2, name: "Mobile 2", description: "Description 2", price: "$300" },
   { id: 3, name: "Mobile 3", description: "Description 3", price: "$400" },
@@ -18,32 +17,39 @@ const products = [
   { id: 6, name: "Mobile 6", description: "Description 6", price: "$400" },
 ];
 
-function AdminProdcut() {
+function AdminProduct({ products, setProducts }) {
   const { id } = useParams();
+  const product = products.find((p) => p.id === Number(id));
+
+  if (!product) return <p>Product not found</p>;
+
+  const handleDelete = () => {
+    setProducts(products.filter((p) => p.id !== Number(id)));
+  };
 
   return (
     <div>
-      <p>Product {id}</p>
-      <input name="title" id="title" />
-
-      <button>Delete</button>
-      <button>Save</button>
+      <h2>{product.name}</h2>
+      <p>{product.description}</p>
+      <button onClick={handleDelete}>Delete</button>
+      <Link to="/admin">
+        <button>Back</button>
+      </Link>
     </div>
   );
 }
 
-function Home() {
+function Home({ products }) {
   return (
     <>
       <PageNav />
       <div className="col-12">
-        <div>
-          {products.map((item) => (
-            <Link key={item.id} to={`/products/${item.id}`}>
-              {item.name} <button>Buy</button>
-            </Link>
-          ))}
-        </div>
+        {products.map((item) => (
+          <div key={item.id}>
+            <Link to={`/products/${item.id}`}>{item.name}</Link>
+            <button>Buy</button>
+          </div>
+        ))}
       </div>
     </>
   );
@@ -58,22 +64,22 @@ function Product() {
       <div>
         <h1>Product {id} </h1>
         <Link to="/">
-          <button className="btn">Other Products</button>
+          <button>Other Products</button>
         </Link>
       </div>
     </>
   );
 }
 
-function Admin() {
+function Admin({ products }) {
   return (
     <>
       <PageNav />
       <h1>Admin Panel</h1>
       {products.map((item) => (
-          <NavLink key={item.id} to={`products/${item.id}`}>
-            {item.name}
-          </NavLink>
+        <div key={item.id}>
+          <NavLink to={`/admin/products/${item.id}`}>{item.name}</NavLink>
+        </div>
       ))}
     </>
   );
@@ -89,13 +95,18 @@ function PageNav() {
 }
 
 function App() {
+  const [products, setProducts] = useState(initialProducts);
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route index element={<Home />} />
-        <Route path="admin" element={<Admin />} />
+        <Route index element={<Home products={products} />} />
+        <Route path="admin" element={<Admin products={products} />} />
         <Route path="products/:id" element={<Product />} />
-        <Route path="admin/products/:id" element={<AdminProdcut />} />
+        <Route
+          path="admin/products/:id"
+          element={<AdminProduct products={products} setProducts={setProducts} />}
+        />
       </Routes>
     </BrowserRouter>
   );
