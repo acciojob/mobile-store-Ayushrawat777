@@ -7,7 +7,7 @@ import {
   Link,
   NavLink,
 } from "react-router-dom";
-
+import { useNavigate  } from "react-router-dom";
 const initialProducts = [
   { id: 1, name: "Mobile 1", description: "Description 1", price: "$200" },
   { id: 2, name: "Mobile 2", description: "Description 2", price: "$300" },
@@ -19,14 +19,14 @@ const initialProducts = [
 
 function AdminProduct({ products, setProducts }) {
   const { id } = useParams();
+  const navigate = useNavigate(); 
   const product = products.find((p) => p.id === Number(id));
-
   if (!product) {
     return <p>Product not found</p>;
   }
 
   const handleDelete = () => {
-    setProducts(products.filter((p) => p.id !== Number(id)));
+    setProducts(products.filter((p) => p.id !== Number(id)));navigate("/");
   };
 
   return (
