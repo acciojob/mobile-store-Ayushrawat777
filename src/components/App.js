@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import {
   BrowserRouter,
   Route,
@@ -7,10 +6,9 @@ import {
   useParams,
   Link,
   NavLink,
-  Navigate,
 } from "react-router-dom";
 
-const products = [
+const initialProducts = [
   { id: 1, name: "Mobile 1", description: "Description 1", price: "$200" },
   { id: 2, name: "Mobile 2", description: "Description 2", price: "$300" },
   { id: 3, name: "Mobile 3", description: "Description 3", price: "$400" },
@@ -22,10 +20,15 @@ const products = [
 function AdminProduct({ products, setProducts }) {
   const { id } = useParams();
   const product = products.find((p) => p.id === Number(id));
-  if (!product) {return <p>Product not found</p>;}
+
+  if (!product) {
+    return <p>Product not found</p>;
+  }
+
   const handleDelete = () => {
     setProducts(products.filter((p) => p.id !== Number(id)));
   };
+
   return (
     <div>
       <h2>{product.name}</h2>
@@ -37,7 +40,8 @@ function AdminProduct({ products, setProducts }) {
     </div>
   );
 }
-function Home() {
+
+function Home({ products }) {
   return (
     <>
       <PageNav />
@@ -70,13 +74,13 @@ function Product() {
   );
 }
 
-function Admin() {
+function Admin({ products }) {
   return (
     <>
       <PageNav />
       <h1>Admin Panel</h1>
       {products.map((item) => (
-        <NavLink key={item.id} to={`products/${item.id}`}>
+        <NavLink key={item.id} to={`/admin/products/${item.id}`}>
           {item.name}
         </NavLink>
       ))}
@@ -94,13 +98,13 @@ function PageNav() {
 }
 
 function App() {
-  const [pro, setProducts] = useState(products);
+  const [pro, setProducts] = useState(initialProducts);
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route index element={<Home products={products} />} />
-        <Route path="admin" element={<Admin products={products} />} />
+        <Route index element={<Home products={pro} />} />
+        <Route path="admin" element={<Admin products={pro} />} />
         <Route path="products/:id" element={<Product />} />
         <Route
           path="admin/products/:id"
