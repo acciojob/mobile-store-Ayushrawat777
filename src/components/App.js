@@ -82,13 +82,13 @@ function Home({ products }) {
     <>
       <PageNav />
       <div className="col-12">
-        {products.map((item) => (
-          <div key={item.id} data-cy={`product-${item.id}`}>
-            <Link to={`/products/${item.id}`}>
-              {item.name} <button>View Details</button>
+        <div>
+          {products.map((item) => (
+            <Link key={item.id} to={`/products/${item.id}`}>
+              {item.name} <button>Buy</button>
             </Link>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </>
   );
@@ -105,7 +105,7 @@ function Product({ products }) {
   return (
     <>
       <PageNav />
-      <div data-cy="product-details">
+      <div>
         <h1>{product.name}</h1>
         <p>{product.description}</p>
         <p>Price: {product.price}</p>
@@ -122,7 +122,7 @@ function Admin({ products }) {
       <PageNav />
       <h1>Admin Panel</h1>
       {products.map((item) => (
-        <NavLink key={item.id} to={`/admin/products/${item.id}`} data-cy={`admin-product-${item.id}`}>
+        <NavLink key={item.id} to={`/admin/products/${item.id}`}>
           {item.name}
         </NavLink>
       ))}
@@ -133,8 +133,8 @@ function Admin({ products }) {
 function PageNav() {
   return (
     <>
-      <NavLink to="/" data-cy="nav-home">Home</NavLink>
-      <NavLink to="/admin" data-cy="nav-admin">Admin</NavLink>
+      <NavLink to="/">Home</NavLink>
+      <NavLink to="/admin">Admin</NavLink>
     </>
   );
 }
