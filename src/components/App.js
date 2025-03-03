@@ -109,7 +109,7 @@ function Product({ products }) {
         <h1>{product.name}</h1>
         <p>{product.description}</p>
         <p>Price: {product.price}</p>
-        <Link to="/">
+        <Link to="/" className="btn">
           <button>Back to Products</button>
         </Link>
       </div>
