@@ -45,13 +45,14 @@ function AdminProduct({ products, setProducts }) {
       p.id === Number(id) ? { ...p, ...editedProduct } : p
     );
     setProducts(updatedProducts);
-    navigate("/admin"); // Navigate back to admin panel
+    navigate("/admin"); // Navigate back to Admin Panel
   };
 
-  // Delete product
+  // Delete product & navigate to Admin Panel
   const handleDelete = () => {
-    setProducts(products.filter((p) => p.id !== Number(id)));
-    navigate("/"); // Redirect to Home
+    const updatedProducts = products.filter((p) => p.id !== Number(id));
+    setProducts(updatedProducts);
+    navigate("/admin"); // Navigate to Admin after deletion
   };
 
   return (
@@ -67,10 +68,10 @@ function AdminProduct({ products, setProducts }) {
       <input type="text" name="price" value={editedProduct.price} onChange={handleChange} />
 
       <button onClick={handleSave}>Save Changes</button>
-      <button onClick={handleDelete}>Delete</button>
+      <button onClick={handleDelete} style={{ marginLeft: "10px" }}>Delete</button>
 
       <Link to="/admin">
-        <button>Back</button>
+        <button style={{ marginLeft: "10px" }}>Back</button>
       </Link>
     </div>
   );
@@ -81,41 +82,47 @@ function Home({ products }) {
     <>
       <PageNav />
       <div className="col-12">
-        <div>
-          {products.map((item) => (
-            <Link key={item.id} to={`/products/${item.id}`}>
-              {item.name} <button>Buy</button>
+        {products.map((item) => (
+          <div key={item.id} data-cy={`product-${item.id}`}>
+            <Link to={`/products/${item.id}`}>
+              {item.name} <button>View Details</button>
             </Link>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </>
   );
 }
 
-function Product() {
+function Product({ products }) {
   const { id } = useParams();
+  const product = products.find((p) => p.id === Number(id));
+
+  if (!product) {
+    return <p>Product not found</p>;
+  }
 
   return (
     <>
       <PageNav />
-      <div>
-        <h1>Product {id} </h1>
+      <div data-cy="product-details">
+        <h1>{product.name}</h1>
+        <p>{product.description}</p>
+        <p>Price: {product.price}</p>
         <Link to="/">
-          <button className="btn">Other Products</button>
+          <button>Back to Products</button>
         </Link>
       </div>
     </>
   );
 }
-
 function Admin({ products }) {
   return (
     <>
       <PageNav />
       <h1>Admin Panel</h1>
       {products.map((item) => (
-        <NavLink key={item.id} to={`/admin/products/${item.id}`}>
+        <NavLink key={item.id} to={`/admin/products/${item.id}`} data-cy={`admin-product-${item.id}`}>
           {item.name}
         </NavLink>
       ))}
@@ -126,8 +133,8 @@ function Admin({ products }) {
 function PageNav() {
   return (
     <>
-      <NavLink to="/">Home</NavLink>
-      <NavLink to="/admin">Admin</NavLink>
+      <NavLink to="/" data-cy="nav-home">Home</NavLink>
+      <NavLink to="/admin" data-cy="nav-admin">Admin</NavLink>
     </>
   );
 }
@@ -140,7 +147,7 @@ function App() {
       <Routes>
         <Route index element={<Home products={pro} />} />
         <Route path="admin" element={<Admin products={pro} />} />
-        <Route path="products/:id" element={<Product />} />
+        <Route path="products/:id" element={<Product products={pro}/>} />
         <Route
           path="admin/products/:id"
           element={<AdminProduct products={pro} setProducts={setProducts} />}
