@@ -1,5 +1,4 @@
-import React from 'react';
-
+import React from "react";
 import {
   BrowserRouter,
   Route,
@@ -18,16 +17,20 @@ const products = [
   { id: 6, name: "Mobile 6", description: "Description 6", price: "$400" },
 ];
 
-function AdminProdcut() {
+function AdminProduct() {
   const { id } = useParams();
+  const product = products.find((p) => p.id === Number(id));
+
+  if (!product) return <p>Product not found.</p>;
 
   return (
     <div>
-      <p>Product {id}</p>
-      <input name="title" id="title" />
-
-      <button>Delete</button>
-      <button>Save</button>
+      <h2>Edit Product: {product.name}</h2>
+      <input name="title" id="title" defaultValue={product.name} />
+      <div>
+        <button>Delete</button>
+        <button>Save</button>
+      </div>
     </div>
   );
 }
@@ -39,9 +42,10 @@ function Home() {
       <div className="col-12">
         <div>
           {products.map((item) => (
-            <Link key={item.id} to={`/products/${item.id}`}>
-              {item.name} <button>Buy</button>
-            </Link>
+            <div key={item.id}>
+              <Link to={`/products/${item.id}`}>{item.name}</Link>
+              <button>Buy</button>
+            </div>
           ))}
         </div>
       </div>
@@ -51,12 +55,17 @@ function Home() {
 
 function Product() {
   const { id } = useParams();
+  const product = products.find((p) => p.id === Number(id));
+
+  if (!product) return <p>Product not found.</p>;
 
   return (
     <>
       <PageNav />
       <div>
-        <h1>Product {id} </h1>
+        <h1>{product.name}</h1>
+        <p>{product.description}</p>
+        <p>Price: {product.price}</p>
         <Link to="/">
           <button className="btn">Other Products</button>
         </Link>
@@ -70,21 +79,23 @@ function Admin() {
     <>
       <PageNav />
       <h1>Admin Panel</h1>
-      {products.map((item) => (
-          <NavLink key={item.id} to={`products/${item.id}`}>
-            {item.name}
-          </NavLink>
-      ))}
+      <div>
+        {products.map((item) => (
+          <div key={item.id}>
+            <NavLink to={`/admin/products/${item.id}`}>{item.name}</NavLink>
+          </div>
+        ))}
+      </div>
     </>
   );
 }
 
 function PageNav() {
   return (
-    <>
+    <nav>
       <NavLink to="/">Home</NavLink>
       <NavLink to="/admin">Admin</NavLink>
-    </>
+    </nav>
   );
 }
 
@@ -95,7 +106,7 @@ function App() {
         <Route index element={<Home />} />
         <Route path="admin" element={<Admin />} />
         <Route path="products/:id" element={<Product />} />
-        <Route path="admin/products/:id" element={<AdminProdcut />} />
+        <Route path="admin/products/:id" element={<AdminProduct />} />
       </Routes>
     </BrowserRouter>
   );
