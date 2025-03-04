@@ -40,20 +40,18 @@ function Home() {
     <>
       <PageNav />
       <div className="col-12">
-        <div className="product-list">
+        <div>
           {products.map((item) => (
-            <div key={item.id} className="product-item">
-              <Link to={`/products/${item.id}`} className="product-link">
-                {item.name}
-              </Link>
-              <button>Buy</button>
-            </div>
+            <a key={item.id} className="product-link" href={`/products/${item.id}`}>
+              {item.name}
+            </a>
           ))}
         </div>
       </div>
     </>
   );
 }
+
 
 function Product() {
   const { id } = useParams();
