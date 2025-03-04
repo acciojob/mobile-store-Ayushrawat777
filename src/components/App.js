@@ -42,9 +42,10 @@ function Home() {
       <div className="col-12">
         <div>
           {products.map((item) => (
-            <a key={item.id} className="product-link" href={`/products/${item.id}`}>
-              {item.name}
-            </a>
+             <div key={item.id}>
+              <Link to={`/products/${item.id}`}>{item.name}</Link>
+              <button>Buy</button>
+            </div>
           ))}
         </div>
       </div>
