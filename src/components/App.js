@@ -58,7 +58,7 @@ function Product() {
       <div>
         <h1>Product {id} </h1>
         <Link to="/">
-          <button className="btn">Other Products</button>
+          <button >Other Products</button>
         </Link>
       </div>
     </>
