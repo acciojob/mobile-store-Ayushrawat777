@@ -40,10 +40,12 @@ function Home() {
     <>
       <PageNav />
       <div className="col-12">
-        <div>
+        <div className="product-list">
           {products.map((item) => (
-            <div key={item.id}>
-              <Link to={`/products/${item.id}`}>{item.name}</Link>
+            <div key={item.id} className="product-item">
+              <Link to={`/products/${item.id}`} className="product-link">
+                {item.name}
+              </Link>
               <button>Buy</button>
             </div>
           ))}
