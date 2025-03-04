@@ -75,22 +75,25 @@ function Product({products}) {
   );
 }
 
-function Admin({ products }) {
+function Admin({ products, setProducts }) {
   return (
     <>
       <PageNav />
       <h1>Admin Panel</h1>
       <div>
-        {products.map((item) => (
-          <div key={item.id}>
-            <NavLink to={`/admin/products/${item.id}`}>{item.name}</NavLink>
-          </div>
-        ))}
+        {products.length > 0 ? (
+          products.map((item) => (
+            <div key={item.id}>
+              <NavLink to={`/admin/products/${item.id}`}>{item.name}</NavLink>
+            </div>
+          ))
+        ) : (
+          <p>No products available.</p>
+        )}
       </div>
     </>
   );
 }
-
 
 function PageNav() {
   return (
